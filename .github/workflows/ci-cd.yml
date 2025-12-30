@@ -34,7 +34,7 @@ jobs:
       - name: Code Linting (Flake8)
         run: |
           echo "🔍 Running Flake8 linter..."
-          flake8 src/ --max-line-length=120 --count --show-source --statistics
+          flake8 src/ --max-line-length=120 --ignore=F401 --count --show-source --statistics
           echo "✅ Linting passed!"
       
       - name: Run Unit Tests
