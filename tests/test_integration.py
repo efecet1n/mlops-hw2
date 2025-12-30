@@ -2,12 +2,14 @@
 # MLOps HW2 - Efe Çetin
 
 import unittest
-import sys
 import os
+import sys
 import json
 
-# Add src to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+# Add project root to path for CI compatibility
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
 
 from src.api import app
 
