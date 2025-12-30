@@ -4,6 +4,7 @@
 import pickle
 import os
 from typing import Optional
+import numpy as np
 
 
 class FlightDelayModel:
@@ -54,8 +55,7 @@ class FlightDelayModel:
         """
         if not self.loaded:
             raise RuntimeError("Model not loaded")
-        
-        import numpy as np
+
         features_scaled = self.scaler.transform([features])
         prediction = self.model.predict(features_scaled)
         return int(prediction[0])
@@ -72,8 +72,7 @@ class FlightDelayModel:
         """
         if not self.loaded:
             raise RuntimeError("Model not loaded")
-        
-        import numpy as np
+
         features_scaled = self.scaler.transform([features])
         proba = self.model.predict_proba(features_scaled)
         return proba[0].tolist()

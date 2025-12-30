@@ -11,7 +11,6 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.feature_engineering import (
     hash_airport_code,
     hash_airline_code,
-    categorize_delay,
     extract_features
 )
 
