@@ -33,15 +33,15 @@ jobs:
       
       - name: Code Linting (Flake8)
         run: |
-          echo "🔍 Running Flake8 linter..."
+          echo "Running Flake8 linter..."
           flake8 src/ --max-line-length=120 --exit-zero --count --show-source --statistics
-          echo "✅ Linting check complete!"
+          echo "Linting check complete!"
       
       - name: Run Unit Tests
         run: |
-          echo "🧪 Running unit tests..."
+          echo "Running unit tests..."
           python -m pytest tests/test_feature_engineering.py -v --tb=short
-          echo "✅ Unit tests passed!"
+          echo "Unit tests passed!"
 
   # ==========================================================================
   # ACCEPTANCE STAGE (CD) - Part 2
@@ -68,28 +68,28 @@ jobs:
       - name: Run Integration Tests
         continue-on-error: true
         run: |
-          echo "🔗 Running integration tests..."
-          python -m pytest tests/test_integration.py -v --tb=short || echo "⚠️ Integration tests had issues"
-          echo "✅ Integration tests step complete!"
+          echo "Running integration tests..."
+          python -m pytest tests/test_integration.py -v --tb=short || echo "Warning: Integration tests had issues"
+          echo "Integration tests step complete!"
       
       - name: Build Docker Image
         run: |
-          echo "🐳 Building Docker image..."
+          echo "Building Docker image..."
           docker build -t flight-delay-api:latest .
-          echo "✅ Docker build successful!"
+          echo "Docker build successful!"
       
       - name: Start Container
         run: |
-          echo "🚀 Starting container..."
+          echo "Starting container..."
           docker run -d -p 8080:8080 --name api-test flight-delay-api:latest
           sleep 10
-          echo "✅ Container started!"
+          echo "Container started!"
       
       - name: Run Smoke Tests
         run: |
-          echo "💨 Running smoke tests..."
+          echo "Running smoke tests..."
           python smoke_test.py
-          echo "✅ Smoke tests passed!"
+          echo "Smoke tests passed!"
       
       - name: Cleanup
         if: always()

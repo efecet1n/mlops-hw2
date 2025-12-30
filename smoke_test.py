@@ -20,7 +20,7 @@ def test_health():
     if data.get("status") != "healthy":
         raise AssertionError(f"Unexpected health status: {data}")
     
-    print("✅ Health check passed")
+    print("[PASS] Health check passed")
     return True
 
 
@@ -55,7 +55,7 @@ def test_predict():
     if data["prediction"] not in [0, 1, 2]:
         raise AssertionError(f"Invalid prediction: {data['prediction']}")
     
-    print(f"✅ Prediction endpoint passed (prediction={data['prediction']})")
+    print(f"[PASS] Prediction endpoint passed (prediction={data['prediction']})")
     return True
 
 
@@ -87,14 +87,14 @@ def test_features():
         if not isinstance(data[key], int):
             raise AssertionError(f"{key} is not an integer")
     
-    print("✅ Features endpoint passed")
+    print("[PASS] Features endpoint passed")
     return True
 
 
 def run_smoke_tests():
     """Run all smoke tests."""
     print("=" * 50)
-    print("🚀 Starting Smoke Tests")
+    print("Starting Smoke Tests")
     print("=" * 50)
     print()
     
@@ -109,7 +109,7 @@ def run_smoke_tests():
                 print(f"Waiting for service... ({i+1}/{max_retries})")
                 time.sleep(2)
             else:
-                print("❌ Service not available")
+                print("[FAIL] Service not available")
                 sys.exit(1)
     
     # Run tests
@@ -122,10 +122,10 @@ def run_smoke_tests():
             test()
             passed += 1
         except AssertionError as e:
-            print(f"❌ {test.__name__} failed: {e}")
+            print(f"[FAIL] {test.__name__} failed: {e}")
             failed += 1
         except Exception as e:
-            print(f"❌ {test.__name__} error: {e}")
+            print(f"[FAIL] {test.__name__} error: {e}")
             failed += 1
     
     print()
@@ -134,10 +134,10 @@ def run_smoke_tests():
     print("=" * 50)
     
     if failed > 0:
-        print("\n❌ Smoke tests FAILED")
+        print("\n[FAIL] Smoke tests FAILED")
         sys.exit(1)
     else:
-        print("\n🎉 All smoke tests PASSED!")
+        print("\n[SUCCESS] All smoke tests PASSED!")
         sys.exit(0)
 
 

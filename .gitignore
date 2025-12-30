@@ -40,3 +40,9 @@ Thumbs.db
 # Coverage
 .coverage
 htmlcov/
+
+# Reports and Homework
+RAPOR.md
+REPORT.md
+*.pdf
+screenshots/
