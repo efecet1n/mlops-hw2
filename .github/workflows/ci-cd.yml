@@ -1,0 +1,97 @@
+# MLOps CI/CD Pipeline
+# MLOps HW2 - Efe Çetin
+
+name: MLOps CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  # ==========================================================================
+  # COMMIT STAGE (CI) - Part 1
+  # ==========================================================================
+  commit-stage:
+    name: Commit Stage (Lint & Unit Tests)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Code Linting (Flake8)
+        run: |
+          echo "🔍 Running Flake8 linter..."
+          flake8 src/ --max-line-length=120 --count --show-source --statistics
+          echo "✅ Linting passed!"
+      
+      - name: Run Unit Tests
+        run: |
+          echo "🧪 Running unit tests..."
+          python -m pytest tests/test_feature_engineering.py -v --tb=short
+          echo "✅ Unit tests passed!"
+
+  # ==========================================================================
+  # ACCEPTANCE STAGE (CD) - Part 2
+  # ==========================================================================
+  acceptance-stage:
+    name: Acceptance Stage (Build & Smoke Test)
+    needs: commit-stage
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Run Integration Tests
+        run: |
+          echo "🔗 Running integration tests..."
+          python -m pytest tests/test_integration.py -v --tb=short
+          echo "✅ Integration tests passed!"
+      
+      - name: Build Docker Image
+        run: |
+          echo "🐳 Building Docker image..."
+          docker build -t flight-delay-api:latest .
+          echo "✅ Docker build successful!"
+      
+      - name: Start Container
+        run: |
+          echo "🚀 Starting container..."
+          docker run -d -p 8080:8080 --name api-test flight-delay-api:latest
+          sleep 10
+          echo "✅ Container started!"
+      
+      - name: Run Smoke Tests
+        run: |
+          echo "💨 Running smoke tests..."
+          python smoke_test.py
+          echo "✅ Smoke tests passed!"
+      
+      - name: Cleanup
+        if: always()
+        run: |
+          docker stop api-test || true
+          docker rm api-test || true
