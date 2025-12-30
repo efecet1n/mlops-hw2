@@ -60,7 +60,8 @@ def categorize_delay(delay_minutes: Optional[float]) -> int:
     """
     if delay_minutes is None:
         return 0
-    if delay_minutes <= 10:
+    # BUG: Wrong threshold! Should be 10, not 15
+    if delay_minutes <= 15:
         return 0
     elif delay_minutes <= 30:
         return 1
